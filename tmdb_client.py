@@ -48,7 +48,19 @@ def show_rated_movies():
     else:
         print("\nNenhum filme avaliado ainda.")
 
-# Função para buscar filmes por título
+# Função para buscar o trailer do filme
+def get_movie_trailer(movie_id):
+    url = f"{BASE_URL}/movie/{movie_id}/videos"
+    params = {"api_key": API_KEY}
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        for video in data['results']:
+            if video['site'] == "YouTube" and video['type'] == "Trailer":
+                trailer_url = f"https://www.youtube.com/watch?v={video['key']}"
+                return trailer_url
+    return "Trailer não disponível."
+
 def search_movie(movie_title):
     url = f"{BASE_URL}/search/movie"
     params = {
@@ -64,13 +76,14 @@ def search_movie(movie_title):
             print(f"{index}. Título: {movie['title']}")
             print("   Data de lançamento:", movie['release_date'])
             print("   Descrição:", movie['overview'])
+            trailer_url = get_movie_trailer(movie['id'])
+            print("   Trailer:", trailer_url)
             print("-" * 40)
         return data['results']
     else:
         print("Erro ao buscar dados:", response.status_code)
         return None
 
-# Função para listar filmes populares
 def get_popular_movies():
     url = f"{BASE_URL}/movie/popular"
     params = {
@@ -84,6 +97,8 @@ def get_popular_movies():
         for movie in data['results']:
             print("Título:", movie['title'])
             print("Data de lançamento:", movie['release_date'])
+            trailer_url = get_movie_trailer(movie['id'])
+            print("Trailer:", trailer_url)
             print("-" * 40)
     else:
         print("Erro ao buscar dados:", response.status_code)
