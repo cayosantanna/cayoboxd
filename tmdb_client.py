@@ -48,7 +48,6 @@ def show_rated_movies():
     else:
         print("\nNenhum filme avaliado ainda.")
 
-# Função para buscar o trailer do filme
 def get_movie_trailer(movie_id):
     url = f"{BASE_URL}/movie/{movie_id}/videos"
     params = {"api_key": API_KEY}
